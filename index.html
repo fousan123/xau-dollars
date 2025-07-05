@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gold Position Size Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    body {
+      background: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .calculator {
+      background: #1e293b;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      width: 100%;
+      max-width: 400px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+    label {
+      display: block;
+      margin: 1rem 0 0.5rem;
+      font-weight: 600;
+    }
+    input {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 10px;
+      border: none;
+      font-size: 1rem;
+    }
+    button {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 0.8rem;
+      background: #38bdf8;
+      color: #0f172a;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #334155;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+    .note {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 0.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h1>XAUUSD Position Size Calculator</h1>
+    <label for="account">Account Size (USD)</label>
+    <input type="number" id="account" placeholder="e.g. 5000">
+
+    <label for="risk">Risk % per Trade</label>
+    <input type="number" id="risk" placeholder="e.g. 1">
+
+    <label for="stop">Stop-Loss Distance (in Dollars)</label>
+    <input type="number" id="stop" placeholder="e.g. 10">
+    <div class="note">Not the amount you're risking — enter the price distance between your entry and stop-loss. E.g., if your stop-loss is $10 below entry, type 10.</div>
+
+    <button onclick="calculate()">Calculate Lot Size</button>
+
+    <div class="result" id="output"></div>
+  </div>
+
+  <script>
+    function calculate() {
+      const account = parseFloat(document.getElementById('account').value);
+      const riskPercent = parseFloat(document.getElementById('risk').value);
+      const stopLossDollars = parseFloat(document.getElementById('stop').value);
+
+      if (isNaN(account) || isNaN(riskPercent) || isNaN(stopLossDollars) || stopLossDollars <= 0) {
+        document.getElementById('output').innerText = 'Please enter valid values in all fields.';
+        return;
+      }
+
+      const stopLossPips = stopLossDollars * 100; // Convert $ stop loss to pips (1$ = 100 pips in gold)
+      const riskAmount = account * (riskPercent / 100);
+      const lotSize = riskAmount / stopLossPips; // 1 pip = $1 per lot in gold
+
+      document.getElementById('output').innerText = `Recommended Lot Size: ${lotSize.toFixed(3)} lots`;
+    }
+  </script>
+</body>
+</html>
